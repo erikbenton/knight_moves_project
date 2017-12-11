@@ -1,5 +1,5 @@
 require_relative "Knight.rb"
 
-knight = Knight.new([0,0])
+knight = Knight.new([3,3])
 
-puts knight.knight_moves([2, 4], [0,0]).inspect
+puts knight.knight_moves(knight.position, [0,0])

@@ -1,27 +1,30 @@
+require_relative "Move.rb"
+
 class Knight
 
 	attr_accessor :position
 
 	def initialize(position=[0, 0])
-		@position = position
+		@position = Move.new(position, -1)
 	end
 
 	def knight_moves(starting_pos=@position, ending_pos=@position)
 
-		move_list = starting_pos.inspect.to_s
+		move_list = []
+		move_list.push(starting_pos)
 
-		return move_list if starting_pos == ending_pos
+		i = 0
 
-		next_moves = self.calc_moves(starting_pos)
-
-		if next_moves.index(ending_pos)
-			return move_list += next_moves[next_moves.index(ending_pos)].inspect.to_s
-		end
-
-		more_moves = []
-
-		next_moves.each do |move|
-			more_moves = self.calc_moves(move)
+		while(move_list[i].position != ending_pos)
+			next_moves = calc_moves(move_list[i].position)
+			next_moves.map! { |position| Move.new(position, i) }
+			next_moves.each do |move|
+				move_list.push(move)
+				if move.position == ending_pos
+					return path_string(move_list, move, i)
+				end
+			end
+			i += 1
 		end
 
 	end
@@ -42,6 +45,20 @@ class Knight
 		end
 
 		possible_moves
+	end
+
+	def path_string(moves, move, counter)
+		j = counter
+		number_of_moves = 0
+		path = ""
+		while j >= 0
+			path = "\n#{move.position.inspect}" + path
+			j = move.parent
+			move = moves[j]
+			number_of_moves += 1
+		end
+		path = "You made it in #{number_of_moves-1} moves! Here's you path:" + path
+		return path
 	end
 
 end
